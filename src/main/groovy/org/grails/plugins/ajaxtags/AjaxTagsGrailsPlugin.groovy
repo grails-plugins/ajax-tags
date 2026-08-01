@@ -18,7 +18,7 @@ package org.grails.plugins.ajaxtags
 import grails.plugins.Plugin
 
 class AjaxTagsGrailsPlugin extends Plugin {
-    def grailsVersion = "4.0.0 > *"
+    def grailsVersion = "8.0.0-M4 > *"
     def title = "AJAX Tags"
     def author = "Jeff Brown"
     def authorEmail = "jeff@jeffandbetsy.net"
@@ -26,9 +26,9 @@ class AjaxTagsGrailsPlugin extends Plugin {
 The ajax-tags plugin provides AJAX related GSP tags.
 '''
     def profiles = ['web']
-    def documentation = "http://grails.org/plugin/ajax-tags"
+    def documentation = "https://github.com/grails-plugins/ajax-tags"
     def license = "APACHE"
-    def issueManagement = [system: "GitHub Issues", url: "http://github.com/grails3-plugins/ajax-tags/issues"]
-    def scm = [url: "https://github.com/grails3-plugins/ajax-tags/"]
+    def issueManagement = [system: "GitHub Issues", url: "https://github.com/grails-plugins/ajax-tags/issues"]
+    def scm = [url: "https://github.com/grails-plugins/ajax-tags"]
     def providedArtefacts = [AjaxTagLib]
 }

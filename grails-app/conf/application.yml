@@ -1,13 +1,7 @@
 ---
 grails:
-    profile: web-plugin
     codegen:
         defaultPackage: org.grails.plugins
-    gorm:
-        reactor:
-            # Whether to translate GORM events into Reactor events
-            # Disabled by default for performance reasons
-            events: false
 info:
     app:
         name: '@info.app.name@'
@@ -28,7 +22,6 @@ spring:
                 - '**/*.gsp'
                 - '*.gson'
                 - '**/*.gson'
-                - 'logback.groovy'
                 - '*.properties'
 management:
     endpoints:

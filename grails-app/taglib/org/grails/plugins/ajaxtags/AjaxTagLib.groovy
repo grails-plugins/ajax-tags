@@ -64,9 +64,7 @@ class AjaxTagLib {
         // See http://jira.codehaus.org/browse/GRAILS-2839
         params.remove 'name'
 
-        out << withTag(name: 'form', attrs: params) {
-            out << body()
-        }
+        writeTag('form', params, body)
     }
 
     /**
@@ -224,9 +222,34 @@ class AjaxTagLib {
                       id     : attrs.remove('id'),
                       'class': attrs.remove('class')]
 
-        out << withTag(name: 'input', attrs: params) {
-            out << body()
+        writeTag('input', params, body)
+    }
+
+    /**
+     * Writes an element and its body, skipping attributes with falsy values.
+     *
+     * This does what the g:withTag helper does, but inline. withTag is both a method on
+     * ApplicationTagLib and a tag in the 'g' namespace, so calling it from another taglib
+     * resolves either to the method - which writes to out and returns the writer - or to
+     * the injected tag, which captures its output and returns it instead. Which one you
+     * get depends on call order, so neither 'withTag(..)' nor 'out << withTag(..)' is
+     * correct in both cases.
+     */
+    private void writeTag(String name, Map attrs, Closure body) {
+        out << "<$name"
+        attrs.each { k, v ->
+            if (!v) return
+            if (v instanceof Closure) {
+                out << " $k=\""
+                v()
+                out << '"'
+            } else {
+                out << " $k=\"$v\""
+            }
         }
+        out << '>'
+        out << body()
+        out << "</$name>"
     }
 
     private Encoder getHtmlEncoder() {
