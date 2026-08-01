@@ -1,0 +1,51 @@
+== Alternate Providers
+
+The tags do not generate JavaScript themselves. They delegate to a
+`JavascriptProvider`, which is what makes the plugin library-agnostic:
+
+[source,groovy]
+----
+interface JavascriptProvider {
+
+    /**
+     * Creates a remote function call
+     */
+    def doRemoteFunction(taglib, attrs, out)
+
+    def prepareAjaxForm(attrs)
+}
+----
+
+`doRemoteFunction` writes the JavaScript for a remote call to `out`. It receives the
+calling taglib — useful for `createLink` and the other taglib methods — along with
+the tag's attributes. Attributes it consumes should be removed from the Map, since
+the tags render whatever remains as HTML attributes.
+
+`prepareAjaxForm` is called by `formRemote` and `submitToRemote` before the remote
+function is built. It sets `attrs.params` to an expression that serializes the
+relevant form. When invoked from `submitToRemote`, `attrs.forSubmitTag` is set,
+indicating the surrounding form must be located from the button rather than from the
+element itself.
+
+=== The default provider
+
+`JQueryJavascriptProvider` is used unless another is registered. It emits a
+`jQuery.ajax({...})` call and serializes forms with `jQuery(this).serialize()`.
+
+=== Registering your own
+
+The provider is injected with `@Autowired(required = false)`, so declaring a bean of
+type `JavascriptProvider` replaces the default. Register it in
+`grails-app/conf/spring/resources.groovy`:
+
+[source,groovy]
+----
+import com.example.FetchJavascriptProvider
+
+beans = {
+    javascriptProvider(FetchJavascriptProvider)
+}
+----
+
+The bean name does not matter; injection is by type. Declaring more than one
+`JavascriptProvider` bean without marking one `@Primary` will fail to start.

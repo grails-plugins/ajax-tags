@@ -1,0 +1,9 @@
+== Introduction
+
+The ajax-tags plugin provides GSP tags for simple Ajax tasks. It supplies the
+`formRemote`, `remoteLink`, `remoteField`, `remoteFunction` and `submitToRemote`
+tags, which were part of Grails core before Grails 3.
+
+The tags generate jQuery code by default. The JavaScript they emit is produced by a
+pluggable provider, so an alternate provider can be registered to target any other
+JavaScript library. See <<providers,Alternate Providers>>.

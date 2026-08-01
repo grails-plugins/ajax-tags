@@ -1,0 +1,79 @@
+=== remoteField
+
+Creates a text field that sends its value to a remote action as it is typed. The
+call is wired to the field's `onkeyup` event.
+
+==== Examples
+
+Given this controller:
+
+[source,groovy]
+----
+class BookController {
+
+    def changeTitle() {
+        def b = Book.get(params.id)
+        b.title = params.value
+        b.save()
+    }
+}
+----
+
+[source,html]
+----
+<g:remoteField action="changeTitle" update="titleDiv"
+               name="title" value="${book?.title}" />
+
+<div id="titleDiv">I'm updated with the new title!</div>
+----
+
+==== Attributes
+
+[cols="1,1,3"]
+|===
+|Attribute |Required |Description
+
+|`name`
+|yes
+|The name of the field.
+
+|`value`
+|no
+|The initial value of the field. Defaults to empty.
+
+|`paramName`
+|no
+|The parameter name the field's value is sent as. Defaults to `value`.
+
+|`action`
+|no
+|Action to call. Defaults to the current controller's default action.
+
+|`controller`
+|no
+|Controller to call. Defaults to the current controller.
+
+|`id`
+|no
+|The id to use in the link.
+
+|`update`
+|no
+|Element id to update, or a Map with `success` and `failure` keys.
+
+|`before`, `after`
+|no
+|JavaScript to run before and after the remote call.
+
+|`asynchronous`
+|no
+|Set to `"false"` for a synchronous call.
+
+|`method`
+|no
+|HTTP method for the call. Defaults to `POST`.
+|===
+
+The field's current value is appended to `params` at call time, so an existing
+`params` attribute is preserved. Remaining attributes are HTML-encoded onto the
+`<input>`.

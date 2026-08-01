@@ -1,0 +1,29 @@
+= Grails Ajax Tags Plugin
+:source-highlighter: coderay
+:toc: left
+:icons: font
+
+[#introduction]
+include::introduction.adoc[]
+
+[#installation]
+include::installation.adoc[]
+
+[#usage]
+include::usage.adoc[]
+
+[#providers]
+include::providers.adoc[]
+
+[#reference]
+== Tag Reference
+
+include::ref/formRemote.adoc[]
+
+include::ref/remoteLink.adoc[]
+
+include::ref/remoteField.adoc[]
+
+include::ref/remoteFunction.adoc[]
+
+include::ref/submitToRemote.adoc[]

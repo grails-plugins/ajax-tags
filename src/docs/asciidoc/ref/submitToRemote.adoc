@@ -1,0 +1,58 @@
+=== submitToRemote
+
+Creates a button that submits its surrounding form via Ajax. Unlike `formRemote`,
+this leaves the `<form>` itself untouched, so an ordinary form can gain an Ajax
+submit button without being rewritten.
+
+==== Examples
+
+[source,html]
+----
+<form action="${createLink(controller: 'book', action: 'save')}" method="post">
+    Title: <input name="title" type="text" />
+
+    <g:submitToRemote value="Save" update="result"
+                      url="[controller: 'book', action: 'save']" />
+</form>
+
+<div id="result"></div>
+----
+
+==== Attributes
+
+[cols="1,3"]
+|===
+|Attribute |Description
+
+|`url`
+|Where to submit, as a Map of controller/action/id/params or a URL String.
+
+|`name`
+|The button's `name` attribute.
+
+|`value`
+|The button's label.
+
+|`id`
+|The button's `id` attribute.
+
+|`class`
+|The button's `class` attribute.
+
+|`update`
+|Element id to update, or a Map with `success` and `failure` keys.
+
+|`before`, `after`
+|JavaScript to run before and after the remote call.
+
+|`asynchronous`
+|Set to `"false"` for a synchronous call.
+
+|`method`
+|HTTP method for the call. Defaults to `POST`.
+|===
+
+The rendered element is an `<input type="button">` whose `onclick` serializes the
+enclosing form and fires the Ajax call. Because it is a button rather than a submit
+control, the form does not submit normally if the Ajax call cannot run — use
+`formRemote` where that fallback matters.

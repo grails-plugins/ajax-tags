@@ -1,0 +1,41 @@
+== Installation
+
+Add the plugin to the `dependencies` block of your `build.gradle`:
+
+[source,groovy,subs="attributes"]
+----
+repositories {
+    maven { url 'https://repo.grails.org/grails/core' }
+}
+
+dependencies {
+    implementation 'org.grails.plugins:ajax-tags:{version}'
+}
+----
+
+=== jQuery
+
+The tags emit jQuery by default, so the consuming application must load jQuery
+itself — the plugin does not bundle it. The simplest route is the webjar, whose
+version the Grails BOM already manages:
+
+[source,groovy]
+----
+dependencies {
+    runtimeOnly 'org.webjars.npm:jquery'
+}
+----
+
+Spring Boot serves webjar content under `/webjars/**`, so the layout can reference
+it directly:
+
+[source,html]
+----
+<script src="${request.contextPath}/webjars/jquery/4.0.0/dist/jquery.min.js"></script>
+----
+
+Any other means of loading jQuery works equally well. If you load it from a CDN,
+pin the version and add a Subresource Integrity hash.
+
+If you register an alternate provider that does not target jQuery, none of this
+applies — see <<providers,Alternate Providers>>.

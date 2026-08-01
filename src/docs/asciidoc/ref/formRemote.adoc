@@ -1,0 +1,103 @@
+=== formRemote
+
+Creates a form that submits via Ajax, serializing the form's fields.
+
+==== Examples
+
+Given this controller:
+
+[source,groovy]
+----
+class BookController {
+
+    def show() {
+        [book: Book.get(params.id)]
+    }
+
+    def byAuthor() {
+        [books: Book.findByAuthor(params.author, params)]
+    }
+}
+----
+
+[source,html]
+----
+<g:formRemote name="myForm" update="updateMe"
+              url="[controller: 'book', action: 'show']">
+    Book Id: <input name="id" type="text" />
+</g:formRemote>
+
+<div id="updateMe">this div is updated with the result of the show call</div>
+----
+
+[source,html]
+----
+<g:formRemote name="myForm" update="updateMe"
+              url="[controller: 'book', action: 'byAuthor',
+                    params: [sort: 'title', order: 'desc']]">
+    Author: <input name="author" type="text" />
+</g:formRemote>
+----
+
+The rendered `<form>` carries a `method` and an `action`, so the form still submits
+normally if the Ajax call cannot run. Both can be overridden. This example falls back
+to a GET against `/<context>/book/show`:
+
+[source,html]
+----
+<g:formRemote name="myForm" update="updateMe" method="GET"
+              action="${createLink(controller: 'book', action: 'show')}"
+              url="[controller: 'book', action: 'show']">
+    Book Id: <input name="id" type="text" />
+</g:formRemote>
+----
+
+==== Attributes
+
+[cols="1,1,3"]
+|===
+|Attribute |Required |Description
+
+|`name`
+|yes
+|The name of the form. Used as the `id` when `id` is absent. It is not rendered as a
+`name` attribute on the `<form>`.
+
+|`url`
+|yes
+|Where to submit, as a Map of controller/action/id/params or a URL String.
+
+|`id`
+|no
+|The `id` of the rendered form. Defaults to `name`.
+
+|`action`
+|no
+|The non-Ajax fallback action. Defaults to the `url`.
+
+|`method`
+|no
+|The form method. Defaults to `post`.
+
+|`update`
+|no
+|Element id to update, or a Map with `success` and `failure` keys.
+
+|`before`
+|no
+|JavaScript to run before the remote call.
+
+|`after`
+|no
+|JavaScript to run after the remote call.
+
+|`asynchronous`
+|no
+|Set to `"false"` for a synchronous call.
+|===
+
+Callbacks are listed in <<usage,Usage>>. Any attribute not consumed by the tag or the
+provider is rendered onto the `<form>` element.
+
+CAUTION: `formRemote` rejects a `params` attribute — it would conflict with
+serializing the form. Put a `params` key inside the `url` Map instead.

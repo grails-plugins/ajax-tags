@@ -1,0 +1,98 @@
+=== remoteLink
+
+Creates a link that fires an Ajax call when clicked.
+
+==== Examples
+
+Given this controller:
+
+[source,groovy]
+----
+class BookController {
+
+    def show() {
+        [book: Book.get(params.id)]
+    }
+}
+----
+
+[source,html]
+----
+<g:remoteLink action="show" id="1">Test 1</g:remoteLink>
+
+<g:remoteLink action="show" id="1"
+              update="[success: 'success', failure: 'error']">Test 2</g:remoteLink>
+
+<g:remoteLink action="show" id="1" update="success"
+              onLoading="showSpinner();">Test 3</g:remoteLink>
+
+<g:remoteLink action="show" id="1" update="success"
+              params="[sortBy: 'name', offset: offset]">Test 4</g:remoteLink>
+
+<g:remoteLink action="show" id="1" update="success"
+              before="if (!confirm('Are you sure?')) return false">Test 5</g:remoteLink>
+----
+
+As a method call in GSP:
+
+[source,groovy]
+----
+<%= remoteLink(action: 'show', id: 1, update: 'success',
+               onFailure: 'showError();') { "this is the link body" } %>
+----
+
+==== Attributes
+
+[cols="1,3"]
+|===
+|Attribute |Description
+
+|`action`
+|Action to link to. Defaults to the current controller's default action.
+
+|`controller`
+|Controller to link to. Defaults to the current controller.
+
+|`id`
+|The id to use in the link.
+
+|`url`
+|A Map of link parameters, as an alternative to the individual attributes.
+
+|`uri`
+|A relative URI to link to.
+
+|`fragment`
+|The link fragment, appended after `#`.
+
+|`mapping`
+|The named URL mapping used to rewrite the link.
+
+|`params`
+|A Map of request parameters.
+
+|`elementId`
+|The `id` attribute of the rendered anchor.
+
+|`base`
+|Prefix for the link target, typically an absolute server URL. Overrides `absolute`.
+
+|`absolute`
+|Prefix the target with `grails.serverURL`.
+
+|`update`
+|Element id to update, or a Map with `success` and `failure` keys.
+
+|`before`, `after`
+|JavaScript to run before and after the remote call.
+
+|`asynchronous`
+|Set to `"false"` for a synchronous call.
+
+|`method`
+|HTTP method for the call. Defaults to `POST`.
+|===
+
+The tag renders an `<a>` whose `href` is the ordinary link and whose `onclick` fires
+the Ajax call and returns `false`. Remaining attributes are HTML-encoded onto the
+anchor.

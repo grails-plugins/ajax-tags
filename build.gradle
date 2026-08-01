@@ -1,3 +1,5 @@
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
+
 buildscript {
     repositories {
         maven { url 'https://repo.grails.org/grails/core' }
@@ -12,6 +14,7 @@ buildscript {
 
 plugins {
     id 'groovy'
+    id 'org.asciidoctor.jvm.convert' version '4.0.5'
 }
 
 apply plugin: 'org.apache.grails.gradle.grails-plugin'
@@ -84,6 +87,31 @@ tasks.withType(AbstractArchiveTask).configureEach {
     dirPermissions { permissions ->
         permissions.unix(0755)
     }
+}
+
+asciidoctorj {
+    version = asciidoctorjVersion
+}
+
+tasks.named('asciidoctor', AsciidoctorTask) {
+    sources {
+        include 'index.adoc'
+    }
+    attributes 'toc'              : 'left',
+               'icons'            : 'font',
+               'source-highlighter': 'coderay',
+               'version'          : project.projectVersion
+    baseDirFollowsSourceDir()
+    // A sibling of build/docs/javadoc and build/docs/groovydoc rather than their
+    // parent - Gradle treats an output dir containing another task's output as an
+    // undeclared dependency and fails the build.
+    outputDir = layout.buildDirectory.dir('docs/manual').get().asFile
+}
+
+tasks.register('docs') {
+    group = JavaBasePlugin.DOCUMENTATION_GROUP
+    description = 'Builds the reference guide and the Groovydoc API.'
+    dependsOn 'asciidoctor', 'groovydoc'
 }
 
 grailsPublish {

@@ -1,0 +1,107 @@
+== Usage
+
+Every tag ultimately renders a call to the configured provider's remote function.
+With the default jQuery provider that is a `jQuery.ajax({...})` call.
+
+Given this controller:
+
+[source,groovy]
+----
+class BookController {
+
+    def show() {
+        [book: Book.get(params.id)]
+    }
+}
+----
+
+a link that fetches the result and drops it into a `div`:
+
+[source,html]
+----
+<g:remoteLink action="show" id="1" update="bookDetails">Show book</g:remoteLink>
+
+<div id="bookDetails"></div>
+----
+
+=== Updating the page
+
+The `update` attribute names the element to replace the content of. Pass a String
+to update one element on success, or a Map to handle success and failure
+separately:
+
+[source,html]
+----
+<g:remoteLink action="show" id="1"
+              update="[success: 'bookDetails', failure: 'errors']">Show book</g:remoteLink>
+----
+
+On success the response body replaces the content of the `success` element. On
+failure the responseText replaces the content of the `failure` element.
+
+=== Callbacks
+
+The following callbacks are supported by the default jQuery provider. Each takes a
+snippet of JavaScript:
+
+[cols="1,3"]
+|===
+|Attribute |When it fires
+
+|`onLoading`
+|Before the request is sent.
+
+|`onLoaded`
+|On success, before the `update` element is written.
+
+|`onSuccess`
+|On success, after the `update` element is written.
+
+|`onFailure`
+|On error, after the `failure` element is written.
+
+|`onComplete`
+|After the request finishes, on both success and failure.
+|===
+
+NOTE: Grails 2 and earlier also documented `onUninitialized` and per-status
+callbacks such as `on404`. The default jQuery provider does not implement these —
+it strips them from the attributes without emitting anything, so they are silently
+ignored. Use `onFailure` and inspect the status yourself, or register a provider
+that supports them.
+
+=== Passing parameters
+
+`params` sends request parameters. A Map is emitted as a jQuery `data` object with
+its keys and values JavaScript-escaped; a String is passed through untouched, which
+is how you send a value read from the page at request time:
+
+[source,html]
+----
+<g:remoteLink action="search" update="results"
+              params="[sort: 'title', order: 'desc']">Search</g:remoteLink>
+----
+
+`jsParams` works the same way as a Map, and both may be supplied together.
+
+=== Other attributes
+
+[cols="1,3"]
+|===
+|Attribute |Description
+
+|`method`
+|HTTP method for the call. Defaults to `POST`.
+
+|`asynchronous`
+|Set to the String `"false"` to make a synchronous call. Defaults to asynchronous.
+
+|`dataType`
+|The jQuery `dataType` for the response, for example `json`.
+
+|`before`
+|JavaScript to run before the remote call. A semicolon is appended for you.
+
+|`after`
+|JavaScript to run after the remote call. A semicolon is appended for you.
+|===

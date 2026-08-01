@@ -1,0 +1,78 @@
+=== remoteFunction
+
+Writes the bare JavaScript for a remote call, without any surrounding element. Use it
+to attach an Ajax call to an arbitrary DOM event.
+
+==== Examples
+
+Given this controller:
+
+[source,groovy]
+----
+class BookController {
+
+    def bookByName() {
+        [book: Book.findByName(params.bookName)]
+    }
+}
+----
+
+Assigned to an event handler:
+
+[source,html]
+----
+<select onchange="${remoteFunction(action: 'bookByName',
+                                   update: [success: 'great', failure: 'ohno'],
+                                   params: '\'bookName=\' + this.value')}">
+    <option>first</option>
+    <option>second</option>
+</select>
+----
+
+Because `params` is a String here rather than a Map, it is emitted into the generated
+JavaScript untouched — which is how the value is read from the element at the moment
+the event fires.
+
+==== Attributes
+
+[cols="1,3"]
+|===
+|Attribute |Description
+
+|`action`
+|Action to call. Defaults to the current controller's default action.
+
+|`controller`
+|Controller to call. Defaults to the current controller.
+
+|`id`
+|The id to use in the link.
+
+|`url`
+|A Map of link parameters, as an alternative to the individual attributes.
+
+|`params`
+|A Map of request parameters, or a String emitted verbatim into the JavaScript.
+
+|`jsParams`
+|A Map merged into the request parameters alongside `params`.
+
+|`update`
+|Element id to update, or a Map with `success` and `failure` keys.
+
+|`before`, `after`
+|JavaScript emitted before and after the remote call. A semicolon is appended
+for you.
+
+|`asynchronous`
+|Set to `"false"` for a synchronous call.
+
+|`dataType`
+|The jQuery `dataType` for the response.
+
+|`method`
+|HTTP method for the call. Defaults to `POST`.
+|===
+
+NOTE: This tag writes JavaScript, not HTML, so its output is not HTML-escaped. Do not
+build it from untrusted input.
